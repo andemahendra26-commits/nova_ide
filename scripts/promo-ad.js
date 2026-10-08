@@ -127,7 +127,7 @@ const LOGO = `<svg width="66" height="66" viewBox="0 0 64 64" fill="none">
 <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
 <stop offset="0" stop-color="#f8bd84"/><stop offset="1" stop-color="#cc6240"/></linearGradient></defs>
 <path d="M14 50V14l36 36V14" stroke="url(#g)" stroke-width="7" stroke-linecap="round"
-  stroke-linejoin="round" style="stroke-dasharray:160;animation:draw .95s cubic-bezier(.16,.84,.3,1) 8.95s both"/></svg>`;
+  stroke-linejoin="round" style="stroke-dasharray:160;animation:draw .95s cubic-bezier(.16,.84,.3,1) 8.50s both"/></svg>`;
 
 /* Beat boundaries of the 10s cut:
    0.0 type | 2.0 think | 3.4 plan | 4.7 type | 6.9 write | 8.5 done | 10.0 */
@@ -135,55 +135,55 @@ const BODY = `
 <div class="layer">
 
   <!-- 0.10 – 1.90 : hook, over the first typing beat -->
-  <div class="scrim" style="${hold(0.10, 1.95, 0.4, 0.35)}"></div>
-  <div class="center" style="${hold(0.10, 1.95, 0.3, 0.35)}">
+  <div class="scrim" style="${hold(0.10, 2.35, 0.4, 0.35)}"></div>
+  <div class="center" style="${hold(0.10, 2.35, 0.3, 0.35)}">
     <div class="kick" style="animation:rise .5s ease-out .18s both">a thought experiment</div>
     <h1>
       <span style="display:block">${words('What if Claude had', 0.34)}</span>
       <span style="display:block">${words('a place of its own?', 0.60, 0.055, 'warm')}</span>
     </h1>
-    <div class="rule" style="animation:ruleOut .6s cubic-bezier(.16,.84,.3,1) 1.05s both"></div>
+    <div class="rule" style="animation:ruleOut .6s cubic-bezier(.16,.84,.3,1) 1.15s both"></div>
   </div>
 
   <!-- 2.10 – 3.30 : thinking beat -->
-  <div class="top" style="${hold(2.10, 3.32, 0.28, 0.25)}">
+  <div class="top" style="${hold(2.45, 3.55, 0.26, 0.24)}">
     <div class="t">Most AI tools hand you an answer.</div>
   </div>
 
   <!-- 3.50 – 4.62 : planning beat -->
-  <div class="top" style="${hold(3.50, 4.62, 0.26, 0.24)}">
+  <div class="top" style="${hold(3.64, 4.72, 0.24, 0.22)}">
     <div class="t">This one <em>shows its work.</em></div>
   </div>
 
   <!-- 4.85 – 6.80 : the CSS typing beat -->
-  <div class="lt" style="${hold(4.85, 6.82, 0.3, 0.28)}">
-    <div class="bar" style="animation:barUp .42s cubic-bezier(.16,.84,.3,1) 4.95s both"></div>
+  <div class="lt" style="${hold(4.88, 6.88, 0.3, 0.28)}">
+    <div class="bar" style="animation:barUp .42s cubic-bezier(.16,.84,.3,1) 4.98s both"></div>
     <div>
-      <div class="t" style="animation:wipe .5s cubic-bezier(.16,.84,.3,1) 5.02s both">
+      <div class="t" style="animation:wipe .5s cubic-bezier(.16,.84,.3,1) 5.05s both">
         It types into a real buffer
       </div>
-      <div class="d" style="animation:rise .45s ease-out 5.26s both">character by character</div>
+      <div class="d" style="animation:rise .45s ease-out 5.30s both">character by character</div>
     </div>
   </div>
 
   <!-- 7.05 – 8.40 : writing beat -->
-  <div class="top" style="${hold(7.05, 8.42, 0.26, 0.24)}">
+  <div class="top" style="${hold(7.00, 8.18, 0.24, 0.22)}">
     <div class="t">Six phases. <em>All of them visible.</em></div>
   </div>
 
   <!-- 8.80 – 10.0 : end card -->
-  <div class="end" style="animation:fIn .42s ease-out 8.80s both">
+  <div class="end" style="animation:fIn .42s ease-out 8.35s both">
     <div class="mark">
       ${LOGO}
-      <div class="wm" style="animation:rise .55s cubic-bezier(.16,.84,.3,1) 9.08s both">Nova<em> IDE</em></div>
+      <div class="wm" style="animation:rise .55s cubic-bezier(.16,.84,.3,1) 8.62s both">Nova<em> IDE</em></div>
     </div>
-    <div class="tag" style="animation:rise .5s ease-out 9.26s both">An IDE that shows its work.</div>
-    <div class="pills" style="animation:rise .5s ease-out 9.42s both">
+    <div class="tag" style="animation:rise .5s ease-out 8.84s both">An IDE that shows its work.</div>
+    <div class="pills" style="animation:rise .5s ease-out 9.02s both">
       <span class="pill">Offline agent</span>
       <span class="pill">MCP built in</span>
       <span class="pill">Windows .exe</span>
     </div>
-    <div class="url" style="animation:rise .5s ease-out 9.58s both">
+    <div class="url" style="animation:rise .5s ease-out 9.20s both">
       github.com/andemahendra26-commits/nova_ide
     </div>
   </div>

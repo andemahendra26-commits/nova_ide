@@ -8,8 +8,14 @@ video.
 The cut is 10 seconds and already carries its own on-screen copy, so the post
 text below does not need to repeat it.
 
-LinkedIn autoplays muted, so the cut is built to work with no sound. If you want
-music, drop any track underneath it — nothing in the edit is cut to audio.
+There is a voiceover, generated locally with the Windows SAPI voice (Microsoft
+David) by `scripts/promo-vo.ps1`. Only the legacy Windows voices are installed
+on this machine, so it sounds dated — for a real campaign, re-record those four
+lines with a human or a neural TTS and remux; the script prints each line and
+its timing. LinkedIn autoplays muted anyway, and the cut carries its own
+on-screen copy, so it works fine silent.
+
+Nothing is cut to audio, so any music track can go underneath it.
 
 ---
 
