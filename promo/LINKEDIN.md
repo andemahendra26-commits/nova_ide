@@ -1,7 +1,12 @@
 # LinkedIn post — Nova IDE
 
-Attach `nova-ide-promo-square.mp4` (square crops get more feed real estate on
-mobile) or `nova-ide-promo-1080p.mp4` if you want the wide version.
+Attach `nova-ide-ad-square.mp4` (square gets more feed real estate on mobile),
+or `nova-ide-ad-1080p.mp4` for the wide version. `nova-ide-ad-vertical.mp4` is
+the 9:16 cut, and `nova-ide-ad.gif` is there for anywhere that will not take
+video.
+
+The cut is 10 seconds and already carries its own on-screen copy, so the post
+text below does not need to repeat it.
 
 LinkedIn autoplays muted, so the cut is built to work with no sound. If you want
 music, drop any track underneath it — nothing in the edit is cut to audio.
