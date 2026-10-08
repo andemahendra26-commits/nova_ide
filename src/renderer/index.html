@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en" data-theme="claude-dark">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'self' blob: data:;" />
+<title>Nova IDE</title>
+<link rel="stylesheet" href="vendor/xterm/xterm.css" />
+<link rel="stylesheet" href="css/tokens.css" />
+<link rel="stylesheet" href="css/themes.css" />
+<link rel="stylesheet" href="css/layout.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/testing.css" />
+<link rel="stylesheet" href="css/agent.css" />
+<link rel="stylesheet" href="css/mascot.css" />
+<link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+
+<!-- ───────────────────────── boot sequence ───────────────────────── -->
+<div id="boot" class="boot">
+  <canvas id="boot-canvas" class="boot-canvas"></canvas>
+  <div class="boot-stage">
+    <div class="boot-mark" id="boot-mark">
+      <svg viewBox="0 0 64 64" width="72" height="72" aria-hidden="true">
+        <defs>
+          <linearGradient id="bootGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#d97757"/>
+            <stop offset="100%" stop-color="#f0a868"/>
+          </linearGradient>
+        </defs>
+        <path id="boot-path" d="M14 50V14l36 36V14" fill="none" stroke="url(#bootGrad)"
+              stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="mascot-wrap big" id="boot-mascot"></div>
+    <div class="boot-title">NOVA</div>
+    <div class="boot-sub" id="boot-sub">initialising</div>
+    <div class="boot-rail"><div class="boot-fill" id="boot-fill"></div></div>
+  </div>
+</div>
+
+<!-- ───────────────────────── application shell ───────────────────────── -->
+<div id="app" class="app" hidden>
+
+  <!-- title bar -->
+  <header class="titlebar" id="titlebar">
+    <div class="tb-left">
+      <div class="tb-logo" title="Nova IDE">
+        <svg viewBox="0 0 64 64" width="17" height="17" aria-hidden="true">
+          <path d="M14 50V14l36 36V14" fill="none" stroke="currentColor"
+                stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <nav class="tb-menu" id="tb-menu"></nav>
+    </div>
+    <div class="tb-center" id="tb-title">Nova IDE</div>
+    <div class="tb-right">
+      <button class="tb-btn" id="win-min" title="Minimize" tabindex="-1">
+        <svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 5h10" stroke="currentColor" stroke-width="1"/></svg>
+      </button>
+      <button class="tb-btn" id="win-max" title="Maximize" tabindex="-1">
+        <svg width="10" height="10" viewBox="0 0 10 10"><rect x="0.5" y="0.5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+      </button>
+      <button class="tb-btn tb-close" id="win-close" title="Close" tabindex="-1">
+        <svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor" stroke-width="1"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="body" id="body">
+
+    <!-- activity rail -->
+    <nav class="activitybar" id="activitybar">
+      <div class="ab-top" id="ab-top"></div>
+      <div class="ab-bottom" id="ab-bottom"></div>
+    </nav>
+
+    <!-- primary sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-header">
+        <span class="sb-title" id="sb-title">Explorer</span>
+        <div class="sb-actions" id="sb-actions"></div>
+      </div>
+      <div class="sb-body" id="sb-body">
+        <section class="sb-view" id="view-explorer" data-view="explorer">
+          <div class="ws-bar" id="ws-bar">
+            <button class="ws-open" id="btn-open-folder">Open Folder</button>
+          </div>
+          <div class="tree" id="tree" tabindex="0"></div>
+        </section>
+        <section class="sb-view" id="view-search" data-view="search" hidden></section>
+        <section class="sb-view" id="view-tests" data-view="tests" hidden></section>
+        <section class="sb-view" id="view-settings" data-view="settings" hidden></section>
+      </div>
+    </aside>
+    <div class="resizer resizer-v" id="rz-sidebar" data-target="sidebar"></div>
+
+    <!-- editor column -->
+    <main class="main" id="main">
+      <div class="editor-area" id="editor-area">
+        <div class="tabbar" id="tabbar">
+          <div class="tabs" id="tabs"></div>
+          <div class="tabbar-actions" id="tabbar-actions"></div>
+        </div>
+        <div class="breadcrumbs" id="breadcrumbs"></div>
+        <div class="editor-stack">
+          <div class="editor-host" id="editor-host"></div>
+          <div class="welcome" id="welcome"></div>
+        </div>
+      </div>
+      <div class="resizer resizer-h" id="rz-panel" data-target="panel"></div>
+      <section class="panel" id="panel" hidden>
+        <div class="panel-head">
+          <div class="panel-tabs" id="panel-tabs"></div>
+          <div class="panel-actions" id="panel-actions"></div>
+        </div>
+        <div class="panel-body" id="panel-body"></div>
+      </section>
+    </main>
+
+    <!-- agent sidebar -->
+    <div class="resizer resizer-v" id="rz-agent" data-target="agent"></div>
+    <aside class="agent" id="agent">
+      <header class="ag-head">
+        <div class="ag-brand">
+          <span class="ag-orb" id="ag-orb"></span>
+          <span class="ag-name">Nova Agent</span>
+        </div>
+        <div class="ag-head-right">
+          <span class="ag-provider" id="ag-provider" title="Active provider">engine</span>
+          <button class="ag-icon" id="ag-clear" title="Clear conversation">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M3 4h10M6.5 4V2.6h3V4M4.4 4l.6 9h6l.6-9"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="ag-phases" id="ag-phases"></div>
+
+      <div class="ag-viz" id="ag-viz">
+        <canvas id="think-canvas"></canvas>
+        <div class="ag-thoughts" id="ag-thoughts"></div>
+        <div class="ag-viz-idle" id="ag-viz-idle">
+          <div class="mascot-wrap" id="agent-mascot"></div>
+        </div>
+      </div>
+
+      <div class="ag-telemetry" id="ag-telemetry" hidden>
+        <span class="tel"><b id="tel-phase">idle</b></span>
+        <span class="tel"><i id="tel-time">0.0s</i></span>
+        <span class="tel"><i id="tel-tokens">0</i> tok</span>
+        <button class="ag-stop" id="ag-stop">Stop</button>
+      </div>
+
+      <div class="ag-transcript" id="ag-transcript"></div>
+
+      <div class="ag-composer">
+        <div class="ag-chips" id="ag-chips"></div>
+        <div class="ag-input-row">
+          <textarea id="ag-input" rows="1" placeholder="Ask Nova to build something…" spellcheck="false"></textarea>
+          <button class="ag-send" id="ag-send" title="Send (Enter)">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                 stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 8h11M9 4l4 4-4 4"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- status bar -->
+  <footer class="statusbar" id="statusbar">
+    <div class="st-left" id="st-left"></div>
+    <div class="st-right" id="st-right"></div>
+  </footer>
+</div>
+
+<!-- ───────────────────────── overlays ───────────────────────── -->
+<div class="overlay" id="overlay" hidden>
+  <div class="palette" id="palette" role="dialog" aria-modal="true">
+    <div class="pal-input-row">
+      <span class="pal-prefix" id="pal-prefix"></span>
+      <input id="pal-input" type="text" spellcheck="false" autocomplete="off" />
+    </div>
+    <div class="pal-list" id="pal-list"></div>
+    <div class="pal-foot" id="pal-foot"></div>
+  </div>
+</div>
+
+<div class="ctxmenu" id="ctxmenu" hidden></div>
+<div class="toasts" id="toasts"></div>
+
+<!-- Monaco's AMD loader must run as a classic script before the ES modules start. -->
+<script src="vendor/vs/loader.js"></script>
+<script src="js/monaco-boot.js"></script>
+<script type="module" src="js/boot.js"></script>
+</body>
+</html>

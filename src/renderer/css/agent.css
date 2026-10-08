@@ -1,0 +1,408 @@
+/* ── Boot overlay ─────────────────────────────────────────────────────── */
+.boot {
+  position: fixed; inset: 0;
+  z-index: 1000;
+  background: radial-gradient(ellipse at 50% 45%, #1c1714 0%, #0d0c0b 62%, #070706 100%);
+  display: grid; place-items: center;
+}
+.boot.done { animation: boot-out var(--d-slow) var(--ease-in-out) both; pointer-events: none; }
+.boot-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.boot-stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 13px; }
+
+.boot-mark { animation: boot-mark-in 780ms var(--ease-spring) both; }
+.boot-mark #boot-path {
+  stroke-dasharray: 160;
+  stroke-dashoffset: 160;
+  animation: boot-draw 1000ms var(--ease-out) 240ms both;
+  filter: drop-shadow(0 0 12px rgba(217, 119, 87, .7));
+}
+
+.boot-title {
+  font-size: 25px; font-weight: 700;
+  letter-spacing: .34em; text-indent: .34em;
+  color: #faf6f2;
+  animation: boot-text-in 760ms var(--ease-out) 420ms both;
+}
+.boot-sub {
+  font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
+  color: #6b6058;
+  min-height: 14px;
+  animation: fade-in var(--d-slow) 700ms both;
+}
+.boot-rail {
+  width: 190px; height: 2px;
+  background: rgba(255, 255, 255, .08);
+  border-radius: 2px; overflow: hidden;
+  margin-top: 5px;
+}
+.boot-fill {
+  height: 100%; width: 0;
+  background: linear-gradient(90deg, #d97757, #f0a868);
+  box-shadow: 0 0 11px rgba(217, 119, 87, .8);
+  transition: width 260ms var(--ease-out);
+}
+
+/* ── Agent header ─────────────────────────────────────────────────────── */
+.ag-head {
+  height: 38px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 8px 0 13px;
+  border-bottom: var(--hairline) solid var(--border);
+  flex: 0 0 auto;
+}
+.ag-brand { display: flex; align-items: center; gap: 8px; }
+.ag-orb {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 10px var(--accent-glow);
+  animation: orb-idle 3s var(--ease-in-out) infinite;
+}
+.agent[data-busy='true'] .ag-orb { animation: orb-busy 900ms var(--ease-in-out) infinite; }
+.ag-name { font-size: var(--fs-md); font-weight: 600; color: var(--fg-bright); letter-spacing: .01em; }
+.ag-head-right { display: flex; align-items: center; gap: 4px; }
+.ag-provider {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 2px 6px; border-radius: var(--radius-full);
+  cursor: pointer;
+}
+.ag-icon {
+  width: 23px; height: 23px;
+  display: grid; place-items: center;
+  border-radius: var(--radius-sm);
+  color: var(--fg-subtle);
+  transition: background var(--d-instant), color var(--d-instant);
+}
+.ag-icon:hover { background: var(--bg-hover); color: var(--fg-bright); }
+
+/* ── Phase rail ───────────────────────────────────────────────────────── */
+.ag-phases {
+  display: flex; align-items: center; gap: 3px;
+  padding: 8px 10px;
+  border-bottom: var(--hairline) solid var(--border);
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+.ph {
+  display: flex; align-items: center; gap: 4px;
+  flex: 1; min-width: 0;
+  opacity: .32;
+  transition: opacity var(--d-base);
+}
+.ph-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--fg-subtle);
+  flex: 0 0 auto;
+  transition: background var(--d-base), box-shadow var(--d-base), transform var(--d-base);
+}
+.ph-label {
+  font-size: 9px; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--fg-subtle);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ph.active { opacity: 1; }
+.ph.active .ph-dot {
+  background: var(--accent);
+  box-shadow: 0 0 9px var(--accent-glow);
+  animation: phase-activate var(--d-slow) var(--ease-spring);
+}
+.ph.active .ph-label { color: var(--accent); font-weight: 700; }
+.ph.done { opacity: .72; }
+.ph.done .ph-dot { background: var(--success); box-shadow: none; }
+
+/* ── Thinking visualization ───────────────────────────────────────────── */
+.ag-viz {
+  position: relative;
+  height: 128px;
+  flex: 0 0 auto;
+  border-bottom: var(--hairline) solid var(--border);
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 120%, var(--accent-soft) 0%, transparent 62%);
+}
+#think-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.ag-thoughts {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 10px 12px;
+  gap: 3px;
+  pointer-events: none;
+}
+.thought {
+  font-family: var(--font-code);
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--fg-muted);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, .85);
+  animation: thought-in var(--d-base) var(--ease-out) both;
+}
+.thought.fading { animation: thought-drift 900ms var(--ease-in-out) both; }
+.thought .th-cursor {
+  display: inline-block;
+  width: 5px; height: 10px;
+  background: var(--accent);
+  margin-left: 2px;
+  vertical-align: -1px;
+  animation: caret-blink 900ms steps(1) infinite;
+}
+.thought.latest { color: var(--fg-bright); }
+
+.ag-viz-idle {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  font-size: var(--fs-sm);
+  text-transform: uppercase; letter-spacing: .11em;
+  color: var(--fg-subtle);
+  transition: opacity var(--d-base);
+}
+.ag-viz-idle[hidden] { display: none; }
+.ag-viz-idle-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+  animation: pulse-soft 2.4s var(--ease-in-out) infinite;
+}
+
+/* Scan line for the understanding phase. */
+.agent[data-phase='understanding'] .ag-viz::after {
+  content: '';
+  position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  box-shadow: 0 0 14px var(--accent-glow);
+  animation: scan-sweep 1.1s var(--ease-in-out) infinite;
+}
+
+/* ── Telemetry strip ──────────────────────────────────────────────────── */
+.ag-telemetry {
+  display: flex; align-items: center; gap: 12px;
+  padding: 5px 10px 5px 13px;
+  border-bottom: var(--hairline) solid var(--border);
+  font-size: var(--fs-sm);
+  color: var(--fg-subtle);
+  flex: 0 0 auto;
+  animation: row-in var(--d-base) var(--ease-out) both;
+}
+.ag-telemetry[hidden] { display: none; }
+.tel b {
+  color: var(--accent);
+  text-transform: uppercase; letter-spacing: .06em;
+  font-size: 9.5px; font-weight: 700;
+}
+.tel i { font-style: normal; font-family: var(--font-code); color: var(--fg-muted); }
+.ag-stop {
+  margin-left: auto;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(248, 113, 113, .13);
+  color: var(--danger);
+  font-size: var(--fs-sm); font-weight: 600;
+  border: 1px solid rgba(248, 113, 113, .3);
+  transition: background var(--d-fast), transform var(--d-fast) var(--ease-spring);
+}
+.ag-stop:hover { background: rgba(248, 113, 113, .24); transform: scale(1.05); }
+
+/* ── Transcript ───────────────────────────────────────────────────────── */
+.ag-transcript {
+  flex: 1; min-height: 0;
+  overflow-y: auto;
+  padding: 12px 12px 6px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+.msg { animation: msg-in var(--d-base) var(--ease-out) both; max-width: 100%; }
+
+.msg.user {
+  align-self: flex-end;
+  max-width: 88%;
+  background: linear-gradient(135deg, var(--accent-soft), rgba(167, 139, 250, .1));
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md) var(--radius-md) 3px var(--radius-md);
+  padding: 7px 11px;
+  font-size: var(--fs-md);
+  color: var(--fg-bright);
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.msg.nova {
+  font-size: var(--fs-md);
+  color: var(--fg-default);
+  line-height: 1.6;
+  word-break: break-word;
+}
+.msg.nova .m-head {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--fg-subtle); font-weight: 700;
+  margin-bottom: 4px;
+}
+.msg.nova .m-head::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+.msg.nova code {
+  font-family: var(--font-code); font-size: 11px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 4px;
+  color: var(--accent);
+}
+.msg.system {
+  font-size: var(--fs-sm);
+  color: var(--fg-subtle);
+  text-align: center;
+  padding: 3px 0;
+}
+.msg.error {
+  background: rgba(248, 113, 113, .09);
+  border: 1px solid rgba(248, 113, 113, .28);
+  border-radius: var(--radius-md);
+  padding: 8px 11px;
+  font-size: var(--fs-md);
+  color: var(--danger);
+  word-break: break-word;
+}
+
+/* ── Plan board ───────────────────────────────────────────────────────── */
+.plan {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  padding: 9px 10px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.plan-title {
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: .09em;
+  color: var(--fg-subtle); font-weight: 700;
+  margin-bottom: 4px;
+}
+.step {
+  display: flex; align-items: center; gap: 8px;
+  padding: 3px 0;
+  font-size: var(--fs-md);
+  color: var(--fg-subtle);
+  animation: step-in var(--d-base) var(--ease-out) both;
+  transition: color var(--d-base);
+}
+.step-box {
+  width: 14px; height: 14px; flex: 0 0 auto;
+  border: 1.4px solid var(--border-strong);
+  border-radius: 4px;
+  display: grid; place-items: center;
+  transition: border-color var(--d-base), background var(--d-base);
+}
+.step-box svg { width: 9px; height: 9px; }
+.step-box path { stroke-dasharray: 14; stroke-dashoffset: 14; }
+.step-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.step.active { color: var(--fg-bright); }
+.step.active .step-box { border-color: var(--accent); background: var(--accent-soft); }
+.step.active .step-box::after {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--accent);
+  animation: pulse-soft 1.1s var(--ease-in-out) infinite;
+}
+.step.done { color: var(--fg-muted); }
+.step.done .step-box { border-color: var(--success); background: rgba(52, 211, 153, .15); }
+.step.done .step-box path { stroke: var(--success); animation: check-draw 320ms var(--ease-out) both; }
+
+/* ── Artifact card ────────────────────────────────────────────────────── */
+.artifact {
+  display: flex; align-items: center; gap: 9px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: border-color var(--d-fast), transform var(--d-fast) var(--ease-out);
+  animation: msg-in var(--d-base) var(--ease-out) both;
+}
+.artifact:hover { border-color: var(--accent); transform: translateX(2px); }
+.artifact .af-icon {
+  width: 26px; height: 26px; flex: 0 0 auto;
+  border-radius: var(--radius-sm);
+  display: grid; place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 9px; font-weight: 700;
+}
+.artifact .af-body { flex: 1; min-width: 0; }
+.artifact .af-name { font-size: var(--fs-md); color: var(--fg-bright); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.artifact .af-meta { font-size: var(--fs-sm); color: var(--fg-subtle); }
+
+/* ── Composer ─────────────────────────────────────────────────────────── */
+.ag-composer {
+  border-top: var(--hairline) solid var(--border);
+  padding: 8px 10px 10px;
+  flex: 0 0 auto;
+  background: var(--bg-surface);
+}
+.ag-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 7px; }
+.chip {
+  font-size: var(--fs-sm);
+  color: var(--fg-muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 3px 9px;
+  cursor: pointer;
+  transition: border-color var(--d-fast), color var(--d-fast), transform var(--d-fast) var(--ease-spring);
+  animation: pop-in var(--d-base) var(--ease-spring) both;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+
+.ag-input-row {
+  display: flex; align-items: flex-end; gap: 6px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 6px 6px 6px 10px;
+  transition: border-color var(--d-fast), box-shadow var(--d-fast);
+}
+.ag-input-row:focus-within { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+#ag-input {
+  flex: 1; min-width: 0;
+  max-height: 128px;
+  background: none; border: none; outline: none; resize: none;
+  color: var(--fg-default);
+  font-size: var(--fs-md);
+  line-height: 1.5;
+  padding: 2px 0;
+}
+#ag-input::placeholder { color: var(--fg-subtle); }
+.ag-send {
+  width: 27px; height: 27px; flex: 0 0 auto;
+  display: grid; place-items: center;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #05070d;
+  transition: transform var(--d-fast) var(--ease-spring), box-shadow var(--d-base), opacity var(--d-fast);
+}
+.ag-send:hover { transform: scale(1.09); box-shadow: 0 3px 13px var(--accent-glow); }
+.ag-send:disabled { opacity: .35; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* While a run is in flight the mascot tucks into the corner so the neural
+   field and the thought stream own the centre of the panel. */
+.ag-viz-idle.working {
+  inset: auto 6px 2px auto;
+  width: 82px;
+  height: 78px;
+  opacity: 1;
+}
+.ag-viz-idle { transition: opacity var(--d-base) var(--ease-out); }
+
+/* A suggestion inside a reply: clicking it loads the phrasing into the composer. */
+.msg.nova .m-hint {
+  display: inline-block;
+  margin-top: 7px;
+  padding: 4px 10px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-full);
+  font-size: var(--fs-sm);
+  color: var(--accent);
+  cursor: pointer;
+  transition: border-color var(--d-fast), background var(--d-fast);
+}
+.msg.nova .m-hint:hover { border-style: solid; border-color: var(--accent); background: var(--accent-soft); }

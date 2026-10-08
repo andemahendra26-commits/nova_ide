@@ -1,0 +1,399 @@
+/* ── Test Studio ──────────────────────────────────────────────────────────
+   Sidebar view for the codeless test builder. Colour comes from the theme
+   contract in themes.css; every duration comes from the --d-* tokens so the
+   reduced-motion switch in tokens.css collapses this file along with the
+   rest of the interface.                                                    */
+
+.ts {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── toolbar ──────────────────────────────────────────────────────────── */
+
+.ts-toolbar {
+  display: flex; align-items: center; gap: 2px;
+  padding: 5px 8px;
+  flex: 0 0 auto;
+  border-bottom: var(--hairline) solid var(--border);
+  position: relative;
+}
+.ts-spacer { flex: 1; }
+.ts-toolbar .icon-btn:disabled { opacity: .35; pointer-events: none; }
+
+/* A run in progress reads as a moving hairline rather than a spinner. */
+.ts-running .ts-toolbar::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  background-size: 40% 100%;
+  animation: ts-sweep 1.2s var(--ease-in-out) infinite;
+}
+@keyframes ts-sweep {
+  from { background-position: -40% 0 }
+  to { background-position: 140% 0 }
+}
+
+/* ── segmented tabs ───────────────────────────────────────────────────── */
+
+.ts-seg {
+  display: flex; gap: 2px;
+  margin: 7px 10px 4px;
+  padding: 2px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  flex: 0 0 auto;
+}
+.ts-seg-btn {
+  flex: 1;
+  padding: 4px 0;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm); font-weight: 600;
+  color: var(--fg-subtle);
+  transition: background var(--d-fast) var(--ease-out), color var(--d-fast);
+}
+.ts-seg-btn:hover { color: var(--fg-default); }
+.ts-seg-btn.on { background: var(--accent-soft); color: var(--accent); }
+
+.ts-scroll { flex: 1; overflow: auto; min-height: 0; padding-bottom: 10px; }
+
+/* ── empty states ─────────────────────────────────────────────────────── */
+
+.ts-empty {
+  padding: 22px 16px;
+  font-size: var(--fs-md);
+  color: var(--fg-subtle);
+  line-height: 1.7;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+}
+.ts-cta {
+  padding: 5px 12px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #05070d; font-weight: 600; font-size: var(--fs-sm);
+  transition: transform var(--d-fast) var(--ease-spring), box-shadow var(--d-base);
+}
+.ts-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 18px var(--accent-glow); }
+
+/* ── tree rows ────────────────────────────────────────────────────────── */
+
+.ts-node,
+.ts-step,
+.ts-el {
+  animation: row-in var(--d-base) var(--ease-out) both;
+  /* Capped so a hundred-step case does not take three seconds to appear. */
+  animation-delay: calc(min(var(--i, 0), 12) * var(--stagger));
+}
+
+.ts-node {
+  display: flex; align-items: center; gap: 5px;
+  height: 24px;
+  padding-right: 8px;
+  white-space: nowrap;
+  position: relative;
+  cursor: pointer;
+  transition: background var(--d-instant);
+}
+.ts-node:hover { background: var(--bg-hover); }
+
+.ts-suite { padding-left: 8px; }
+.ts-case { padding-left: 20px; }
+.ts-suite .ts-name { font-weight: 600; color: var(--fg-bright); font-size: var(--fs-md); }
+.ts-case .ts-name { color: var(--fg-default); font-size: var(--fs-md); }
+.ts-name { overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+
+.ts-twisty {
+  width: 14px; height: 14px; flex: 0 0 auto;
+  display: grid; place-items: center;
+  color: var(--fg-subtle);
+  transition: transform var(--d-fast) var(--ease-out);
+}
+.ts-twisty.open { transform: rotate(90deg); }
+
+.ts-badge {
+  background: var(--bg-active); color: var(--fg-muted);
+  border-radius: var(--radius-full);
+  font-size: 9.5px; font-weight: 700;
+  padding: 1px 6px;
+  flex: 0 0 auto;
+}
+.ts-badge.data { background: var(--accent-soft); color: var(--accent); }
+
+.ts-act {
+  width: 20px; height: 20px; flex: 0 0 auto;
+  display: grid; place-items: center;
+  border-radius: var(--radius-sm);
+  color: var(--fg-subtle);
+  opacity: 0;
+  transition: opacity var(--d-fast), background var(--d-instant), color var(--d-instant), transform var(--d-fast) var(--ease-spring);
+}
+.ts-node:hover .ts-act,
+.ts-editor-foot .ts-act,
+.ts-el:hover .ts-act { opacity: 1; }
+.ts-act:hover { background: var(--bg-active); color: var(--fg-bright); }
+.ts-act:active { transform: scale(.86); }
+.ts-act.danger:hover { background: rgba(248, 113, 113, .15); color: var(--danger); }
+
+.ts-rename {
+  flex: 1; min-width: 0;
+  background: var(--bg-input);
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  color: var(--fg-bright);
+  font-size: var(--fs-md);
+  padding: 1px 4px;
+  outline: none;
+}
+
+/* ── step rows ────────────────────────────────────────────────────────── */
+
+.ts-step {
+  display: flex; align-items: center; gap: 7px;
+  padding: 3px 8px 3px 30px;
+  min-height: 23px;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  position: relative;
+  border-left: 2px solid transparent;
+  /* The pass/fail colour change is a transition, not a jump. */
+  transition: background var(--d-base) var(--ease-out),
+              border-color var(--d-base) var(--ease-out),
+              opacity var(--d-fast);
+}
+.ts-step:hover { background: var(--bg-hover); }
+.ts-step.off { opacity: .4; }
+.ts-step.editing { background: var(--bg-active); }
+
+.ts-step .ts-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--fg-subtle); opacity: .45;
+  flex: 0 0 auto;
+  transition: background var(--d-base) var(--ease-out), opacity var(--d-base), box-shadow var(--d-base);
+}
+.ts-step .ts-idx { color: var(--fg-subtle); font-size: var(--fs-xs); min-width: 13px; text-align: right; flex: 0 0 auto; }
+.ts-step .ts-verb {
+  font-size: var(--fs-xs); font-weight: 700;
+  letter-spacing: .02em;
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-active); color: var(--fg-muted);
+  flex: 0 0 auto;
+}
+.ts-step.g-assert .ts-verb { background: rgba(167, 139, 250, .16); color: var(--accent-2); }
+.ts-step.g-api .ts-verb { background: rgba(251, 191, 36, .14); color: var(--warning); }
+
+.ts-step .ts-desc {
+  flex: 1; min-width: 0;
+  color: var(--fg-muted);
+  font-family: var(--font-code);
+  font-size: var(--fs-xs);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ts-step .ts-time { color: var(--fg-subtle); font-size: var(--fs-xs); flex: 0 0 auto; }
+
+/* Live status. Each row also pops once so a fast run still registers visually. */
+.ts-step.run-running {
+  background: var(--accent-soft);
+  border-left-color: var(--accent);
+}
+.ts-step.run-running .ts-dot {
+  background: var(--accent); opacity: 1;
+  box-shadow: 0 0 7px var(--accent-glow);
+  animation: pulse-soft 1s var(--ease-in-out) infinite;
+}
+.ts-step.run-pass {
+  background: rgba(52, 211, 153, .10);
+  border-left-color: var(--success);
+  animation: ts-settle var(--d-slow) var(--ease-out) both;
+}
+.ts-step.run-pass .ts-dot { background: var(--success); opacity: 1; }
+.ts-step.run-fail {
+  background: rgba(248, 113, 113, .12);
+  border-left-color: var(--danger);
+  animation: ts-settle var(--d-slow) var(--ease-spring) both;
+}
+.ts-step.run-fail .ts-dot { background: var(--danger); opacity: 1; box-shadow: 0 0 7px rgba(248, 113, 113, .5); }
+.ts-step.run-skip { opacity: .42; border-left-color: var(--fg-subtle); }
+
+@keyframes ts-settle {
+  from { transform: translateX(3px); }
+  to { transform: translateX(0); }
+}
+
+/* ── step editor ──────────────────────────────────────────────────────── */
+
+.ts-editor {
+  margin: 2px 10px 8px 30px;
+  padding: 9px 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: flex; flex-direction: column; gap: 7px;
+  animation: row-in var(--d-fast) var(--ease-out) both;
+}
+.ts-field { display: flex; flex-direction: column; gap: 3px; }
+.ts-field > label {
+  font-size: var(--fs-xs); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .07em;
+  color: var(--fg-subtle);
+}
+.ts-editor-foot { display: flex; align-items: center; gap: 3px; padding-top: 2px; }
+
+.ts-input,
+.ts-select,
+.ts-code {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--fg-default);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  padding: 4px 6px;
+  outline: none;
+  transition: border-color var(--d-fast), box-shadow var(--d-fast);
+}
+.ts-input:focus,
+.ts-select:focus,
+.ts-code:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.ts-input.mono,
+.ts-code { font-family: var(--font-code); font-size: var(--fs-xs); }
+.ts-code { resize: vertical; line-height: 1.55; }
+.ts-code.bad { border-color: var(--danger); }
+.ts-select { cursor: pointer; }
+
+.ts-check {
+  display: flex; align-items: center; gap: 5px;
+  font-size: var(--fs-xs);
+  color: var(--fg-muted);
+  cursor: pointer;
+}
+.ts-cb { accent-color: var(--accent); width: 12px; height: 12px; cursor: pointer; }
+
+.ts-mini {
+  padding: 3px 9px;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-xs); font-weight: 600;
+  background: var(--bg-active);
+  color: var(--fg-muted);
+  transition: background var(--d-instant), color var(--d-instant);
+  flex: 0 0 auto;
+}
+.ts-mini:hover { background: var(--bg-hover); color: var(--fg-bright); }
+
+.ts-case-foot {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px 8px 30px;
+}
+.ts-add-step { width: auto; flex: 0 0 auto; }
+
+/* ── dataset panel ────────────────────────────────────────────────────── */
+
+.ts-panel {
+  margin: 0 10px 10px 30px;
+  padding: 9px 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: flex; flex-direction: column; gap: 6px;
+  animation: row-in var(--d-fast) var(--ease-out) both;
+}
+.ts-panel-title {
+  font-size: var(--fs-xs); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .07em;
+  color: var(--fg-subtle);
+}
+.ts-hint { font-size: var(--fs-xs); color: var(--fg-subtle); line-height: 1.6; word-break: break-word; }
+.ts-hint.warn { color: var(--warning); }
+
+/* ── element repository ───────────────────────────────────────────────── */
+
+.ts-repo-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 10px;
+  font-size: var(--fs-sm);
+  color: var(--fg-subtle);
+}
+.ts-el {
+  margin: 0 10px 7px;
+  padding: 8px 9px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: flex; flex-direction: column; gap: 5px;
+  transition: border-color var(--d-fast), background var(--d-fast);
+}
+.ts-el:hover { border-color: var(--border-strong); }
+.ts-el-top { display: flex; align-items: center; gap: 5px; }
+.ts-el-top .ts-input.name { flex: 1; min-width: 0; font-weight: 600; color: var(--fg-bright); }
+.ts-el-top .ts-select { width: auto; flex: 0 0 auto; }
+
+/* ── results panel ────────────────────────────────────────────────────── */
+
+.ts-results {
+  flex: 0 0 auto;
+  max-height: 42%;
+  display: flex; flex-direction: column;
+  border-top: var(--hairline) solid var(--border);
+  background: var(--bg-surface);
+  min-height: 0;
+}
+.ts-results-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 10px;
+  flex: 0 0 auto;
+}
+.ts-results-title {
+  font-size: var(--fs-xs); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--fg-muted);
+}
+.ts-sum { flex: 1; min-width: 0; font-size: var(--fs-xs); color: var(--fg-subtle); overflow: hidden; text-overflow: ellipsis; }
+.ts-sum.running { color: var(--accent); }
+.ts-sum.pass { color: var(--success); }
+.ts-sum.fail { color: var(--danger); }
+
+.ts-log { flex: 1; overflow: auto; min-height: 60px; padding: 0 0 8px; }
+.ts-log-row {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 3px 10px;
+  font-size: var(--fs-xs);
+  animation: row-in var(--d-fast) var(--ease-out) both;
+}
+.ts-log-row .ts-log-mark {
+  width: 5px; height: 5px; border-radius: 50%;
+  margin-top: 5px; flex: 0 0 auto;
+  background: var(--fg-subtle);
+}
+.ts-log-row.pass .ts-log-mark { background: var(--success); }
+.ts-log-row.fail .ts-log-mark { background: var(--danger); }
+.ts-log-row.skip .ts-log-mark { background: var(--fg-subtle); opacity: .5; }
+.ts-log-row.head { color: var(--fg-muted); font-weight: 600; }
+.ts-log-row.head .ts-log-mark { background: var(--accent); }
+.ts-log-row.skip { opacity: .55; }
+
+.ts-log-body { flex: 1; min-width: 0; }
+.ts-log-text { color: var(--fg-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ts-log-row.fail .ts-log-text { color: var(--fg-default); }
+.ts-log-detail {
+  font-family: var(--font-code);
+  color: var(--fg-subtle);
+  margin-top: 1px;
+  word-break: break-word;
+  line-height: 1.5;
+}
+.ts-log-row.fail .ts-log-detail { color: var(--danger); }
+.ts-log-ms { color: var(--fg-subtle); flex: 0 0 auto; margin-top: 1px; }
+
+.ts-shot {
+  display: block;
+  width: 100%;
+  margin-top: 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  animation: pop-in var(--d-base) var(--ease-out) both;
+}

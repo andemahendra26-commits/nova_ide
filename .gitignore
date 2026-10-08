@@ -1,0 +1,24 @@
+# Dependencies — restore with `npm install`
+node_modules/
+
+# Vendored third-party editor runtime — restore with `npm run vendor`
+src/renderer/vendor/
+
+# Build output. The shipped installers are tracked deliberately (see README);
+# everything else here is regenerable with `npm run dist`.
+release/win-unpacked/
+release/builder-debug.yml
+release/*.blockmap
+release/.cache/
+
+# Dev scratch
+.preview/
+.playwright-mcp/
+promo/frames/
+promo/raw/
+
+# OS / editor noise
+Thumbs.db
+desktop.ini
+.DS_Store
+*.log

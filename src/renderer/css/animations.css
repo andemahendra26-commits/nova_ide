@@ -1,0 +1,199 @@
+/* ── Keyframe library ─────────────────────────────────────────────────────
+   Every animation here moves only transform / opacity / filter / clip-path so
+   the work stays on the compositor and never touches layout (TRD §4.4).      */
+
+@keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes fade-out { from { opacity: 1 } to { opacity: 0 } }
+
+@keyframes shell-in {
+  from { opacity: 0; transform: scale(.992) }
+  to { opacity: 1; transform: scale(1) }
+}
+
+@keyframes row-in {
+  from { opacity: 0; transform: translateX(-7px) }
+  to { opacity: 1; transform: translateX(0) }
+}
+
+@keyframes tab-in {
+  from { opacity: 0; transform: translateX(-12px) scaleX(.9); transform-origin: left }
+  to { opacity: 1; transform: translateX(0) scaleX(1) }
+}
+
+@keyframes slide-w {
+  from { transform: scaleX(0); transform-origin: left }
+  to { transform: scaleX(1) }
+}
+
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(.4) }
+  100% { opacity: 1; transform: scale(1) }
+}
+
+@keyframes palette-in {
+  from { opacity: 0; transform: translateY(-14px) scale(.97); filter: blur(6px) }
+  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0) }
+}
+
+@keyframes ctx-in {
+  from { opacity: 0; transform: scale(.94); transform-origin: top left }
+  to { opacity: 1; transform: scale(1) }
+}
+
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(18px) }
+  to { opacity: 1; transform: translateY(0) }
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(40px) scale(.94) }
+  to { opacity: 1; transform: translateX(0) scale(1) }
+}
+@keyframes toast-out {
+  from { opacity: 1; transform: translateX(0) scale(1) }
+  to { opacity: 0; transform: translateX(40px) scale(.94) }
+}
+
+@keyframes flash-once {
+  0% { opacity: 0 }
+  18% { opacity: .17 }
+  100% { opacity: 0 }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; transform: scale(1) }
+  50% { opacity: .55; transform: scale(.82) }
+}
+
+@keyframes mark-float {
+  0%, 100% { transform: translateY(0) rotate(0deg) }
+  50% { transform: translateY(-7px) rotate(-2.5deg) }
+}
+
+/* ── Boot sequence ── */
+@keyframes boot-out {
+  from { opacity: 1; transform: scale(1); filter: blur(0) }
+  to { opacity: 0; transform: scale(1.06); filter: blur(10px) }
+}
+@keyframes boot-mark-in {
+  0% { opacity: 0; transform: scale(.4) rotate(-22deg) }
+  60% { opacity: 1; transform: scale(1.1) rotate(4deg) }
+  100% { opacity: 1; transform: scale(1) rotate(0) }
+}
+@keyframes boot-draw { to { stroke-dashoffset: 0 } }
+@keyframes boot-text-in {
+  from { opacity: 0; letter-spacing: .7em; transform: translateY(8px) }
+  to { opacity: 1; letter-spacing: .34em; transform: translateY(0) }
+}
+
+/* ── Agent: orb, phases, thoughts ── */
+@keyframes orb-idle {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-soft); transform: scale(1) }
+  50% { box-shadow: 0 0 0 5px transparent; transform: scale(1.14) }
+}
+@keyframes orb-busy {
+  0% { transform: scale(1); filter: hue-rotate(0deg) brightness(1) }
+  50% { transform: scale(1.3); filter: hue-rotate(38deg) brightness(1.5) }
+  100% { transform: scale(1); filter: hue-rotate(0deg) brightness(1) }
+}
+
+@keyframes phase-activate {
+  0% { transform: scale(1) }
+  45% { transform: scale(1.1) }
+  100% { transform: scale(1) }
+}
+
+@keyframes thought-in {
+  from { opacity: 0; transform: translateY(12px) }
+  to { opacity: 1; transform: translateY(0) }
+}
+@keyframes thought-drift {
+  0% { opacity: 1; transform: translateY(0) }
+  100% { opacity: 0; transform: translateY(-22px) }
+}
+
+@keyframes caret-blink {
+  0%, 46% { opacity: 1 }
+  47%, 100% { opacity: .15 }
+}
+
+@keyframes step-in {
+  from { opacity: 0; transform: translateX(-14px) scale(.96) }
+  to { opacity: 1; transform: translateX(0) scale(1) }
+}
+@keyframes check-draw { to { stroke-dashoffset: 0 } }
+
+@keyframes msg-in {
+  from { opacity: 0; transform: translateY(10px) scale(.985) }
+  to { opacity: 1; transform: translateY(0) scale(1) }
+}
+
+/* A scan line sweeping the agent panel during the understanding phase. */
+@keyframes scan-sweep {
+  0% { transform: translateY(-100%); opacity: 0 }
+  12% { opacity: .85 }
+  88% { opacity: .85 }
+  100% { transform: translateY(1400%); opacity: 0 }
+}
+
+@keyframes shimmer {
+  0% { background-position: -180% 0 }
+  100% { background-position: 280% 0 }
+}
+
+@keyframes spin { to { transform: rotate(360deg) } }
+
+/* ── Live-writing decorations inside Monaco ───────────────────────────────
+   Applied by agent/writer.js through Monaco decorations. Scoped to .monaco-editor
+   so they cannot leak into the surrounding chrome.                           */
+
+.monaco-editor .nova-write-line {
+  background: linear-gradient(
+    90deg,
+    var(--accent-soft) 0%,
+    rgba(240, 168, 104, .1) 45%,
+    transparent 100%
+  );
+  animation: write-line-pulse 1.5s var(--ease-in-out) infinite;
+}
+@keyframes write-line-pulse {
+  0%, 100% { opacity: .72 }
+  50% { opacity: 1 }
+}
+
+.monaco-editor .nova-write-glyph {
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  width: 2px !important;
+  margin-left: 3px;
+  border-radius: 2px;
+  animation: write-line-pulse 1.5s var(--ease-in-out) infinite;
+}
+
+/* Freshly written lines cool from accent to transparent. */
+.monaco-editor .nova-fresh-0 { background: rgba(217, 119, 87, .13); transition: background var(--d-slower) linear; }
+.monaco-editor .nova-fresh-1 { background: rgba(217, 119, 87, .09); }
+.monaco-editor .nova-fresh-2 { background: rgba(217, 119, 87, .055); }
+.monaco-editor .nova-fresh-3 { background: rgba(217, 119, 87, .025); }
+
+/* Flash on a search jump target. */
+.monaco-editor .nova-jump-flash {
+  background: var(--accent-soft);
+  animation: jump-flash 1.1s var(--ease-out) both;
+}
+@keyframes jump-flash {
+  0% { opacity: 1 }
+  70% { opacity: .6 }
+  100% { opacity: 0 }
+}
+
+/* The write caret is a content widget, not a real cursor, so the user's own
+   cursor and selection are never hijacked (TRD §4.3.3). */
+.nova-caret {
+  width: 2px;
+  height: 1.25em;
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  border-radius: 2px;
+  box-shadow: 0 0 9px var(--accent-glow), 0 0 20px var(--accent-glow);
+  animation: caret-blink 1s steps(1) infinite;
+  pointer-events: none;
+}

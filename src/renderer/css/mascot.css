@@ -1,0 +1,331 @@
+/* ── Mascot: a rigged pixel character ─────────────────────────────────────
+   Parts animate independently so the creature acts rather than loops. Every
+   duration is a --d-* token, so [data-motion='reduced'] collapses the lot.   */
+
+.mascot { overflow: visible; }
+
+.mascot .mc-fill { fill: var(--accent); }
+
+/* Limbs carry a keyline so they stay readable when they cross the torso —
+   without it an arm reaching for the chin simply vanishes into the body. */
+.mascot .mc-arm rect {
+  stroke: var(--bg-base);
+  stroke-width: 2;
+  paint-order: stroke fill;
+}
+.mascot .mc-hand-fill { fill: var(--accent); }
+.mascot .mc-accent2 { fill: var(--accent-2); }
+.mascot .mc-ink { fill: var(--bg-base); }
+.mascot .mc-eye-white { fill: #fdf8f3; }
+.mascot .mc-drop { fill: #7dd3fc; }
+
+.mascot .mc-prop-page { fill: #f7f1e8; }
+.mascot .mc-prop-edge { fill: #8a7d72; }
+.mascot .mc-prop-clip { fill: #b9aa9c; }
+.mascot .mc-prop-ink { fill: #6b6058; }
+.mascot .mc-prop-read { fill: var(--accent); }
+.mascot .mc-prop-screen { fill: #4a423c; }
+.mascot .mc-prop-keys { fill: #241f1c; }
+.mascot .mc-prop-cap { fill: #8a7d72; }
+.mascot .mc-prop-lens { fill: rgba(125, 211, 252, .40); }
+.mascot .mc-prop-shine { fill: rgba(255, 255, 255, .55); }
+.mascot .mc-prop-tick { fill: var(--success); }
+
+/* ── defaults: everything optional hides, poses opt in ── */
+.mascot .mc-prop,
+.mascot .mc-thought,
+.mascot .mc-codefx,
+.mascot .mc-sweat,
+.mascot .mc-sparks,
+.mascot .mc-eyes-happy,
+.mascot .mc-mouth-smile,
+.mascot .mc-mouth-o,
+.mascot .mc-mouth-wavy,
+.mascot .mc-read-line { opacity: 0; }
+
+.mascot .mc-mouth-flat { opacity: 1; }
+
+/* ── rig pivots ── */
+.mascot .mc-root    { transform-origin: 50% 88%; }
+.mascot .mc-body    { transform-origin: 50% 88%; }
+.mascot .mc-torso   { transform-origin: 50% 62%; }
+.mascot .mc-arm-l   { transform-origin: 22% 40%; }
+.mascot .mc-arms    { transform-origin: 50% 40%; }
+.mascot .mc-arm-r   { transform-origin: 78% 40%; }
+.mascot .mc-antenna { transform-origin: 50% 14%; }
+.mascot .mc-leg     { transform-origin: 50% 62%; }
+.mascot .mc-brow    { transform-origin: 50% 50%; }
+.mascot .mc-eyes, .mascot .mc-pupil { transition: transform var(--d-fast) var(--ease-out); }
+.mascot .mc-prop    { transform-origin: 50% 70%; }
+
+/* ── breathing baseline ── */
+.mascot .mc-body { animation: mcx-breathe 3.4s var(--ease-in-out) infinite; }
+@keyframes mcx-breathe {
+  0%, 100% { transform: translateY(0) scaleY(1) }
+  50%      { transform: translateY(-1.5px) scaleY(1.018) }
+}
+
+/* ── blink ── */
+.mascot .mc-eyes { transform-origin: 50% 32%; }
+.mascot.blinking .mc-eyes { transform: scaleY(.06); }
+
+/* ── gaze ── */
+.mascot[data-gaze='left']   .mc-pupil { transform: translateX(-4px) }
+.mascot[data-gaze='right']  .mc-pupil { transform: translateX(4px) }
+.mascot[data-gaze='up']     .mc-pupil { transform: translateY(-4px) }
+.mascot[data-gaze='down']   .mc-pupil { transform: translateY(4px) }
+.mascot[data-gaze='center'] .mc-pupil { transform: translate(0, 0) }
+
+/* ═════════════ IDLE ═════════════ */
+.mascot[data-phase='idle'] .mc-antenna { animation: mcx-antenna-sway 4s var(--ease-in-out) infinite; }
+@keyframes mcx-antenna-sway {
+  0%, 100% { transform: rotate(0deg) }
+  35%      { transform: rotate(7deg) }
+  70%      { transform: rotate(-5deg) }
+}
+
+/* ═════════════ UNDERSTANDING — reading an open book ═════════════
+   Hands come down onto the book's edges, the head dips to the page, the eyes
+   jump between fixations, and a highlight travels line by line. */
+.mascot[data-phase='understanding'] .mc-book { opacity: 1; animation: mcx-prop-in var(--d-base) var(--ease-spring) both; }
+.mascot[data-phase='understanding'] .mc-arm-l { transform: translate(8px, 30px) rotate(18deg); }
+.mascot[data-phase='understanding'] .mc-arm-r { transform: translate(-8px, 30px) rotate(-18deg); }
+.mascot[data-phase='understanding'] .mc-torso { animation: mcx-read-lean 3s var(--ease-in-out) infinite; }
+.mascot[data-phase='understanding'] .mc-pupil { animation: mcx-read-scan 2.2s steps(1) infinite; }
+.mascot[data-phase='understanding'] .mc-read-line { opacity: 1; animation: mcx-read-highlight 2.2s steps(1) infinite; }
+.mascot[data-phase='understanding'] .mc-book-lines { animation: mcx-page-turn 4.4s var(--ease-in-out) infinite; }
+.mascot[data-phase='understanding'] .mc-brow { transform: translateY(1px); }
+
+@keyframes mcx-read-lean {
+  0%, 100% { transform: rotate(0deg) translateY(0) }
+  50%      { transform: rotate(2deg) translateY(2px) }
+}
+/* steps(1) makes the gaze JUMP between fixations — that is what reads as
+   reading. A smooth glide reads as watching a pendulum. */
+@keyframes mcx-read-scan {
+  0%   { transform: translate(-3px, 4px) }
+  25%  { transform: translate(0px, 4px) }
+  50%  { transform: translate(3px, 4px) }
+  75%  { transform: translate(-3px, 5px) }
+  100% { transform: translate(1px, 5px) }
+}
+@keyframes mcx-read-highlight {
+  0%   { transform: translate(0, 0); width: 24px }
+  50%  { transform: translate(0, 8px); width: 20px }
+  75%  { transform: translate(48px, 0); width: 24px }
+  100% { transform: translate(48px, 8px); width: 16px }
+}
+@keyframes mcx-page-turn {
+  0%, 86%, 100% { opacity: 1; transform: translateX(0) }
+  92%           { opacity: .2; transform: translateX(-5px) }
+  97%           { opacity: 1; transform: translateX(0) }
+}
+
+/* ═════════════ THINKING — hand to chin, eyes up, bubbles rise ═════════════ */
+.mascot[data-phase='thinking'] .mc-arm-r { animation: mcx-chin-tap 1.7s var(--ease-in-out) infinite; }
+.mascot[data-phase='thinking'] .mc-arm-l { transform: translate(12px, 14px) rotate(16deg); }
+.mascot[data-phase='thinking'] .mc-torso { animation: mcx-think-tilt 3.6s var(--ease-in-out) infinite; }
+.mascot[data-phase='thinking'] .mc-pupil { animation: mcx-think-wander 3.2s var(--ease-in-out) infinite; }
+.mascot[data-phase='thinking'] .mc-mouth-flat { opacity: 0; }
+.mascot[data-phase='thinking'] .mc-mouth-o { opacity: 1; }
+.mascot[data-phase='thinking'] .mc-thought { opacity: 1; }
+.mascot[data-phase='thinking'] .mc-td-1 { animation: mcx-bubble 2.1s var(--ease-out) infinite; }
+.mascot[data-phase='thinking'] .mc-td-2 { animation: mcx-bubble 2.1s var(--ease-out) .26s infinite; }
+.mascot[data-phase='thinking'] .mc-td-3 { animation: mcx-bubble 2.1s var(--ease-out) .52s infinite; }
+.mascot[data-phase='thinking'] .mc-brow-l { transform: translateY(-3px) rotate(-10deg); }
+.mascot[data-phase='thinking'] .mc-antenna { animation: mcx-antenna-buzz 1.1s var(--ease-in-out) infinite; }
+
+/* Hand up to the chin, tapping — the universal pondering gesture. The hand
+   starts at the right shoulder, so it travels left and down to reach the jaw. */
+@keyframes mcx-chin-tap {
+  0%, 100% { transform: translate(-26px, 17px) rotate(-12deg) }
+  50%      { transform: translate(-26px, 13px) rotate(-17deg) }
+}
+@keyframes mcx-think-tilt {
+  0%, 100% { transform: rotate(0deg) }
+  50%      { transform: rotate(-4deg) }
+}
+@keyframes mcx-think-wander {
+  0%, 100% { transform: translate(-3px, -4px) }
+  33%      { transform: translate(3px, -4px) }
+  66%      { transform: translate(0, -5px) }
+}
+@keyframes mcx-bubble {
+  0%   { opacity: 0; transform: translateY(6px) scale(.4) }
+  35%  { opacity: 1; transform: translateY(0) scale(1) }
+  80%  { opacity: 1 }
+  100% { opacity: 0; transform: translateY(-5px) scale(1.15) }
+}
+@keyframes mcx-antenna-buzz {
+  0%, 100% { transform: rotate(-10deg) }
+  50%      { transform: rotate(10deg) }
+}
+
+/* ═════════════ PLANNING — clipboard, ticking items off ═════════════ */
+.mascot[data-phase='planning'] .mc-clip { opacity: 1; animation: mcx-prop-in var(--d-base) var(--ease-spring) both; }
+.mascot[data-phase='planning'] .mc-arm-l { transform: translate(8px, 30px) rotate(16deg); }
+.mascot[data-phase='planning'] .mc-arm-r { animation: mcx-tick-write 1.5s var(--ease-in-out) infinite; }
+.mascot[data-phase='planning'] .mc-torso { animation: mcx-nod 1.7s var(--ease-in-out) infinite; }
+.mascot[data-phase='planning'] .mc-tk-1 { animation: mcx-tick-pop 3.2s var(--ease-spring) infinite; }
+.mascot[data-phase='planning'] .mc-tk-2 { animation: mcx-tick-pop 3.2s var(--ease-spring) 1.6s infinite; }
+.mascot[data-phase='planning'] .mc-mouth-flat { opacity: 0; }
+.mascot[data-phase='planning'] .mc-mouth-smile { opacity: 1; }
+
+/* The writing hand travels down the list as it ticks items. */
+/* The writing hand travels down the list as it ticks items off. */
+@keyframes mcx-tick-write {
+  0%, 100% { transform: translate(-14px, 28px) rotate(-16deg) }
+  50%      { transform: translate(-12px, 36px) rotate(-10deg) }
+}
+@keyframes mcx-nod {
+  0%, 100% { transform: translateY(0) rotate(0deg) }
+  50%      { transform: translateY(2px) rotate(1.4deg) }
+}
+@keyframes mcx-tick-pop {
+  0%, 12%   { opacity: 0; transform: scale(.2) }
+  20%, 100% { opacity: 1; transform: scale(1) }
+}
+
+/* ═════════════ WRITING — hands hammering a keyboard ═════════════ */
+.mascot[data-phase='writing'] .mc-laptop { opacity: 1; animation: mcx-prop-in var(--d-base) var(--ease-spring) both; }
+.mascot[data-phase='writing'] .mc-arm-l { animation: mcx-type-l .24s var(--ease-in-out) infinite; }
+.mascot[data-phase='writing'] .mc-arm-r { animation: mcx-type-r .24s var(--ease-in-out) infinite; }
+.mascot[data-phase='writing'] .mc-torso { animation: mcx-type-lean 1.4s var(--ease-in-out) infinite; }
+.mascot[data-phase='writing'] .mc-body { animation-duration: 1.2s; }
+.mascot[data-phase='writing'] .mc-brow-l { transform: translateY(2px) rotate(8deg); }
+.mascot[data-phase='writing'] .mc-brow-r { transform: translateY(2px) rotate(-8deg); }
+.mascot[data-phase='writing'] .mc-codefx { opacity: 1; }
+.mascot[data-phase='writing'] .mc-cf-1 { animation: mcx-code-rise 1.5s var(--ease-out) infinite; }
+.mascot[data-phase='writing'] .mc-cf-2 { animation: mcx-code-rise 1.5s var(--ease-out) .35s infinite; }
+.mascot[data-phase='writing'] .mc-cf-3 { animation: mcx-code-rise 1.5s var(--ease-out) .7s infinite; }
+.mascot[data-phase='writing'] .mc-kc-1 { animation: mcx-key .32s steps(1) infinite; }
+.mascot[data-phase='writing'] .mc-kc-2 { animation: mcx-key .32s steps(1) .08s infinite; }
+.mascot[data-phase='writing'] .mc-kc-3 { animation: mcx-key .32s steps(1) .16s infinite; }
+.mascot[data-phase='writing'] .mc-kc-4 { animation: mcx-key .32s steps(1) .24s infinite; }
+
+/* Hands alternate — left down while right is up. That is the whole illusion. */
+@keyframes mcx-type-l {
+  0%, 100% { transform: translate(20px, 30px) rotate(26deg) }
+  50%      { transform: translate(20px, 34px) rotate(30deg) }
+}
+@keyframes mcx-type-r {
+  0%, 100% { transform: translate(-20px, 34px) rotate(-30deg) }
+  50%      { transform: translate(-20px, 30px) rotate(-26deg) }
+}
+@keyframes mcx-type-lean {
+  0%, 100% { transform: rotate(0deg) translateY(0) }
+  50%      { transform: rotate(1deg) translateY(1.5px) }
+}
+@keyframes mcx-key {
+  0%, 49%   { fill: #8a7d72 }
+  50%, 100% { fill: var(--accent-2) }
+}
+@keyframes mcx-code-rise {
+  0%   { opacity: 0; transform: translate(0, 6px) scaleX(.4) }
+  30%  { opacity: 1; transform: translate(0, 0) scaleX(1) }
+  100% { opacity: 0; transform: translate(4px, -8px) scaleX(.6) }
+}
+
+/* ═════════════ REVIEWING — magnifier held up, eyes tracking it ═════════════ */
+.mascot[data-phase='reviewing'] .mc-glass { opacity: 1; animation: mcx-prop-in var(--d-base) var(--ease-spring) both; }
+.mascot[data-phase='reviewing'] .mc-glass-head { animation: mcx-glass-sweep 2.6s var(--ease-in-out) infinite; }
+.mascot[data-phase='reviewing'] .mc-arm-r { transform: translate(-4px, -20px) rotate(-70deg); }
+.mascot[data-phase='reviewing'] .mc-arm-l { transform: translate(8px, 16px) rotate(14deg); }
+.mascot[data-phase='reviewing'] .mc-pupil { animation: mcx-glass-follow 2.6s var(--ease-in-out) infinite; }
+.mascot[data-phase='reviewing'] .mc-brow-r { transform: translateY(-3px) rotate(-12deg); }
+.mascot[data-phase='reviewing'] .mc-eye-l { transform: scaleY(.7); transform-origin: 50% 34%; }
+.mascot[data-phase='reviewing'] .mc-torso { animation: mcx-inspect-lean 2.6s var(--ease-in-out) infinite; }
+
+@keyframes mcx-glass-sweep {
+  0%, 100% { transform: translate(0, 0) }
+  50%      { transform: translate(-8px, 6px) }
+}
+@keyframes mcx-glass-follow {
+  0%, 100% { transform: translate(4px, 0) }
+  50%      { transform: translate(2px, 3px) }
+}
+@keyframes mcx-inspect-lean {
+  0%, 100% { transform: rotate(0deg) }
+  50%      { transform: rotate(3deg) }
+}
+
+/* ═════════════ DONE — arms up, hop, happy eyes, sparkles ═════════════ */
+.mascot[data-phase='done'] .mc-fill,
+.mascot[data-phase='done'] .mc-hand-fill { fill: var(--success); transition: fill var(--d-base); }
+.mascot[data-phase='done'] .mc-root { animation: mcx-cheer-hop .62s var(--ease-spring) 3; }
+.mascot[data-phase='done'] .mc-arm-l { animation: mcx-cheer-l .62s var(--ease-spring) 3; }
+.mascot[data-phase='done'] .mc-arm-r { animation: mcx-cheer-r .62s var(--ease-spring) 3; }
+.mascot[data-phase='done'] .mc-eye-l,
+.mascot[data-phase='done'] .mc-eye-r { opacity: 0; }
+.mascot[data-phase='done'] .mc-eyes-happy { opacity: 1; }
+.mascot[data-phase='done'] .mc-mouth-flat { opacity: 0; }
+.mascot[data-phase='done'] .mc-mouth-smile { opacity: 1; }
+.mascot[data-phase='done'] .mc-sparks { opacity: 1; }
+.mascot[data-phase='done'] .mc-sp-1 { animation: mcx-spark .9s var(--ease-out) infinite; }
+.mascot[data-phase='done'] .mc-sp-2 { animation: mcx-spark .9s var(--ease-out) .2s infinite; }
+.mascot[data-phase='done'] .mc-sp-3 { animation: mcx-spark .9s var(--ease-out) .4s infinite; }
+
+@keyframes mcx-cheer-hop {
+  0%, 100% { transform: translateY(0) scaleY(1) }
+  25%      { transform: translateY(-10px) scaleY(1.07) }
+  55%      { transform: translateY(0) scaleY(.92) }
+  75%      { transform: translateY(-4px) scaleY(1.02) }
+}
+@keyframes mcx-cheer-l {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) }
+  40%      { transform: translate(6px, -22px) rotate(-46deg) }
+}
+@keyframes mcx-cheer-r {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) }
+  40%      { transform: translate(-6px, -22px) rotate(46deg) }
+}
+@keyframes mcx-spark {
+  0%   { opacity: 0; transform: scale(.3) rotate(0deg) }
+  40%  { opacity: 1; transform: scale(1) rotate(45deg) }
+  100% { opacity: 0; transform: scale(.4) rotate(90deg) }
+}
+
+/* ═════════════ ERROR / STOPPED ═════════════ */
+.mascot[data-phase='error'] .mc-fill,
+.mascot[data-phase='error'] .mc-hand-fill { fill: var(--danger); transition: fill var(--d-base); }
+.mascot[data-phase='error'] .mc-root { animation: mcx-fluster .35s var(--ease-in-out) 3; }
+.mascot[data-phase='error'] .mc-eyes { transform: scale(1.14); }
+.mascot[data-phase='error'] .mc-mouth-flat { opacity: 0; }
+.mascot[data-phase='error'] .mc-mouth-wavy { opacity: 1; }
+.mascot[data-phase='error'] .mc-sweat { opacity: 1; animation: mcx-drip 1.5s var(--ease-in) infinite; }
+.mascot[data-phase='error'] .mc-brow-l { transform: translateY(-2px) rotate(16deg); }
+.mascot[data-phase='error'] .mc-brow-r { transform: translateY(-2px) rotate(-16deg); }
+.mascot[data-phase='error'] .mc-arm-l { transform: rotate(-26deg); }
+.mascot[data-phase='error'] .mc-arm-r { transform: rotate(26deg); }
+
+@keyframes mcx-fluster {
+  0%, 100% { transform: translateX(0) }
+  25%      { transform: translateX(-3px) }
+  75%      { transform: translateX(3px) }
+}
+@keyframes mcx-drip {
+  0%   { opacity: 0; transform: translateY(0) }
+  25%  { opacity: 1; transform: translateY(0) }
+  100% { opacity: 0; transform: translateY(10px) }
+}
+
+/* ── shared ── */
+@keyframes mcx-prop-in {
+  0%   { opacity: 0; transform: translateY(8px) scale(.7) }
+  100% { opacity: 1; transform: translateY(0) scale(1) }
+}
+
+/* ── one-shot reactions from JS ── */
+.mascot.react-nod .mc-torso { animation: mcx-nod-once .5s var(--ease-spring); }
+@keyframes mcx-nod-once {
+  0%, 100% { transform: rotate(0deg) translateY(0) }
+  40%      { transform: rotate(3deg) translateY(3px) }
+}
+
+.mascot-wrap {
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 0 9px var(--accent-glow));
+  transition: filter var(--d-base);
+}
+.mascot-wrap.big { filter: drop-shadow(0 0 20px var(--accent-glow)); }

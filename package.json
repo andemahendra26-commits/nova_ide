@@ -1,0 +1,71 @@
+{
+  "name": "nova-ide",
+  "version": "1.0.0",
+  "description": "Nova IDE \u2014 a living code editor that thinks and writes",
+  "main": "src/main/main.js",
+  "author": "Nova",
+  "license": "MIT",
+  "scripts": {
+    "vendor": "node scripts/vendor.js",
+    "start": "electron .",
+    "prepack": "node scripts/vendor.js",
+    "pack": "electron-builder --win --dir",
+    "dist": "node scripts/vendor.js && electron-builder --win --x64"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "dependencies": {
+    "monaco-editor": "^0.52.0",
+    "@xterm/xterm": "^5.5.0",
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/addon-web-links": "^0.11.0",
+    "chokidar": "^4.0.1"
+  },
+  "build": {
+    "appId": "com.nova.ide",
+    "productName": "Nova IDE",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "package.json",
+      "!**/*.map"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "${productName} ${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName} Portable ${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Nova IDE",
+      "artifactName": "${productName} Setup ${version}.${ext}"
+    },
+    "compression": "normal",
+    "asar": true
+  }
+}

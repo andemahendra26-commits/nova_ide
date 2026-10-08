@@ -1,0 +1,188 @@
+/* ── Themes ───────────────────────────────────────────────────────────────
+   Four palettes over one variable contract. Chrome and Monaco switch together;
+   the Monaco side is defined in js/editor/themes.js against the same values.  */
+
+:root,
+:root[data-theme='claude-dark'] {
+  --bg-base: #0a0a09;
+  --bg-surface: #100f0e;
+  --bg-elevated: #191714;
+  --bg-overlay: #1e1b18;
+  --bg-input: #0c0b0a;
+  --bg-hover: rgba(255, 255, 255, .05);
+  --bg-active: rgba(255, 255, 255, .08);
+  --bg-selected: rgba(217, 119, 87, .16);
+
+  --fg-default: #e6ded6;
+  --fg-muted: #9a8d82;
+  --fg-subtle: #6b6058;
+  --fg-bright: #faf6f2;
+
+  --border: rgba(255, 255, 255, .075);
+  --border-strong: rgba(255, 255, 255, .14);
+
+  --accent: #d97757;
+  --accent-2: #f0a868;
+  --accent-soft: rgba(217, 119, 87, .17);
+  --accent-glow: rgba(217, 119, 87, .5);
+
+  --success: #7fb069;
+  --warning: #e0a458;
+  --danger: #e06c5a;
+
+  --scrollbar: rgba(255, 255, 255, .13);
+  --scrollbar-hover: rgba(255, 255, 255, .24);
+
+  --editor-bg: #0c0b0a;
+  --panel-bg: #0a0a09;
+  --shadow-glow: 0 0 24px var(--accent-glow);
+}
+
+:root[data-theme='nova-dark'] {
+  --bg-base: #0a0c14;
+  --bg-surface: #0e1119;
+  --bg-elevated: #141826;
+  --bg-overlay: #171b2b;
+  --bg-input: #0b0e17;
+  --bg-hover: rgba(255, 255, 255, .045);
+  --bg-active: rgba(255, 255, 255, .075);
+  --bg-selected: rgba(34, 211, 238, .12);
+
+  --fg-default: #d6dcea;
+  --fg-muted: #8993ab;
+  --fg-subtle: #5b6479;
+  --fg-bright: #f2f5fb;
+
+  --border: rgba(255, 255, 255, .07);
+  --border-strong: rgba(255, 255, 255, .13);
+
+  --accent: #22d3ee;
+  --accent-2: #a78bfa;
+  --accent-soft: rgba(34, 211, 238, .16);
+  --accent-glow: rgba(34, 211, 238, .45);
+
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+
+  --scrollbar: rgba(255, 255, 255, .13);
+  --scrollbar-hover: rgba(255, 255, 255, .24);
+
+  --editor-bg: #0b0e17;
+  --panel-bg: #0a0d15;
+  --shadow-glow: 0 0 24px var(--accent-glow);
+}
+
+:root[data-theme='midnight'] {
+  --bg-base: #05070d;
+  --bg-surface: #080b13;
+  --bg-elevated: #0d1119;
+  --bg-overlay: #10141e;
+  --bg-input: #06090f;
+  --bg-hover: rgba(255, 255, 255, .04);
+  --bg-active: rgba(255, 255, 255, .07);
+  --bg-selected: rgba(129, 140, 248, .14);
+
+  --fg-default: #c9d1e4;
+  --fg-muted: #7b859c;
+  --fg-subtle: #505a70;
+  --fg-bright: #eef2fb;
+
+  --border: rgba(255, 255, 255, .06);
+  --border-strong: rgba(255, 255, 255, .11);
+
+  --accent: #818cf8;
+  --accent-2: #38bdf8;
+  --accent-soft: rgba(129, 140, 248, .18);
+  --accent-glow: rgba(129, 140, 248, .5);
+
+  --success: #4ade80;
+  --warning: #facc15;
+  --danger: #fb7185;
+
+  --scrollbar: rgba(255, 255, 255, .11);
+  --scrollbar-hover: rgba(255, 255, 255, .2);
+
+  --editor-bg: #06090f;
+  --panel-bg: #05070d;
+  --shadow-glow: 0 0 26px var(--accent-glow);
+}
+
+:root[data-theme='synthwave'] {
+  --bg-base: #17112b;
+  --bg-surface: #1d1636;
+  --bg-elevated: #251c44;
+  --bg-overlay: #2a2050;
+  --bg-input: #150f27;
+  --bg-hover: rgba(255, 255, 255, .06);
+  --bg-active: rgba(255, 255, 255, .1);
+  --bg-selected: rgba(244, 114, 182, .16);
+
+  --fg-default: #e8dcff;
+  --fg-muted: #a08fc9;
+  --fg-subtle: #7663a0;
+  --fg-bright: #fdf7ff;
+
+  --border: rgba(255, 255, 255, .09);
+  --border-strong: rgba(255, 255, 255, .16);
+
+  --accent: #f472b6;
+  --accent-2: #22d3ee;
+  --accent-soft: rgba(244, 114, 182, .2);
+  --accent-glow: rgba(244, 114, 182, .55);
+
+  --success: #4ade80;
+  --warning: #fde047;
+  --danger: #ff6b8a;
+
+  --scrollbar: rgba(255, 255, 255, .16);
+  --scrollbar-hover: rgba(255, 255, 255, .28);
+
+  --editor-bg: #1a1430;
+  --panel-bg: #17112b;
+  --shadow-glow: 0 0 30px var(--accent-glow);
+}
+
+:root[data-theme='nova-light'] {
+  --bg-base: #f4f6fb;
+  --bg-surface: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-overlay: #ffffff;
+  --bg-input: #f0f3f9;
+  --bg-hover: rgba(10, 20, 45, .045);
+  --bg-active: rgba(10, 20, 45, .08);
+  --bg-selected: rgba(8, 145, 178, .13);
+
+  --fg-default: #1e2635;
+  --fg-muted: #5a6577;
+  --fg-subtle: #8792a4;
+  --fg-bright: #080d16;
+
+  --border: rgba(10, 20, 45, .1);
+  --border-strong: rgba(10, 20, 45, .18);
+
+  --accent: #0891b2;
+  --accent-2: #7c3aed;
+  --accent-soft: rgba(8, 145, 178, .12);
+  --accent-glow: rgba(8, 145, 178, .3);
+
+  --success: #059669;
+  --warning: #d97706;
+  --danger: #dc2626;
+
+  --scrollbar: rgba(10, 20, 45, .2);
+  --scrollbar-hover: rgba(10, 20, 45, .32);
+
+  --editor-bg: #ffffff;
+  --panel-bg: #f7f9fd;
+  --shadow-glow: 0 0 20px var(--accent-glow);
+}
+
+/* Cross-fade on theme change (TH-2). Applied briefly by settings.js, then removed
+   so it never taxes ordinary interaction. */
+.theme-transition,
+.theme-transition * {
+  transition: background-color var(--d-slow) var(--ease-out),
+              color var(--d-slow) var(--ease-out),
+              border-color var(--d-slow) var(--ease-out) !important;
+}
